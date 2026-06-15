@@ -1,5 +1,15 @@
 import os
+import sys
 import pygame
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 class AssetLoader:
     def __init__(self):
@@ -12,7 +22,7 @@ class AssetLoader:
         
     def load_assets(self):
         try:
-            tileset_path = 'assets/Modern tiles_Free/Interiors_free/48x48/Interiors_free_48x48.png'
+            tileset_path = resource_path('assets/Modern tiles_Free/Interiors_free/48x48/Interiors_free_48x48.png')
             if os.path.exists(tileset_path):
                 # We load the image. Pygame needs to be initialized.
                 self.tileset = pygame.image.load(tileset_path).convert_alpha()
@@ -48,8 +58,8 @@ class AssetLoader:
             }
             
             for role, name in chars.items():
-                run_path = f'assets/Modern tiles_Free/Characters_free/{name}_run_16x16.png'
-                idle_path = f'assets/Modern tiles_Free/Characters_free/{name}_idle_16x16.png'
+                run_path = resource_path(f'assets/Modern tiles_Free/Characters_free/{name}_run_16x16.png')
+                idle_path = resource_path(f'assets/Modern tiles_Free/Characters_free/{name}_idle_16x16.png')
                 
                 if os.path.exists(run_path) and os.path.exists(idle_path):
                     self.characters[role] = {
