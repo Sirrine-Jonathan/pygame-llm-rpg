@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # The Pygame RPG Application
+  game:
+    build: .
+    container_name: vault_rpg_game
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - .:/app
+    environment:
+      # Directs Pygame to bind to the host's X11 server socket
+      - DISPLAY=${DISPLAY:-:0}
+    network_mode: host
+    ipc: host
+    privileged: true
+    depends_on:
+      - ollama
+
+  # Local Ollama service
+  ollama:
+    image: ollama/ollama:latest
+    container_name: vault_rpg_ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+volumes:
+  ollama_data:
